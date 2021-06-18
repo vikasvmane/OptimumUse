@@ -140,64 +140,8 @@
                     android:id="@+id/groupExpiryDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     app:constraint_referenced_ids="textExpDatePreview,btnExpCalendar" />
-
-                <TextView
-                    android:id="@+id/textSelectedDate"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Selected Date"
-                    app:layout_constraintBottom_toBottomOf="@+id/btnLaunchCalendar"
-                    app:layout_constraintEnd_toStartOf="@+id/btnLaunchCalendar"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/btnLaunchCalendar" />
-
-                <Button
-                    android:id="@+id/btnLaunchCalendar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Pick from \ncalendar"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.833"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/guideline3"
-                    app:layout_constraintVertical_bias="0.037" />
-
-                <EditText
-                    android:id="@+id/editBestBefore"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="28dp"
-                    android:layout_weight="3"
-                    android:ems="10"
-                    android:hint="Enter best before"
-                    android:inputType="number"
-                    app:layout_constraintBottom_toTopOf="@+id/btnSubmit"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/btnLaunchCalendar"
-                    app:layout_constraintVertical_bias="0.0" />
-
-                <Spinner
-                    android:id="@+id/spinnerTimeline"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="260dp"
-                    android:layout_marginLeft="260dp"
-                    android:layout_weight="1"
-                    app:layout_constraintBottom_toBottomOf="@+id/editBestBefore"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/editBestBefore"
-                    app:layout_constraintTop_toTopOf="@+id/editBestBefore" />
-
-                <androidx.constraintlayout.widget.Group
-                    android:id="@+id/groupEnterManufactureDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    app:constraint_referenced_ids="textSelectedDate,spinnerTimeline,btnLaunchCalendar,editBestBefore" />
 
                 <EditText
                     android:id="@+id/editExactDays"
@@ -228,6 +172,7 @@
                     android:id="@+id/groupExactDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     app:constraint_referenced_ids="spinnerTime,editExactDays" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

@@ -35,12 +35,9 @@ class AddProductFragment : Fragment() {
     private lateinit var btnSubmit: Button
     private val myCalendar = Calendar.getInstance()
     private lateinit var layoutExpiryDate: Group
-    private lateinit var layoutManufacturingDate: Group
     private lateinit var layoutExactDate: Group
     private lateinit var radioGroupExpiryDate: RadioGroup
-    private lateinit var spinnerTimeline: Spinner
     private lateinit var spinnerTime: Spinner
-    private lateinit var timelineAdapter: ArrayAdapter<String>
     private lateinit var timeAdapter: ArrayAdapter<String>
     var duration = listOf("Days", "Month", "Years")
     private lateinit var addProductViewModel: AddProductViewModel
@@ -75,15 +72,13 @@ class AddProductFragment : Fragment() {
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
         (activity as MainActivity).fab.visibility = GONE
 
-        editName = view.findViewById(R.id.editTextName)
-        textExpiryDate = view.findViewById(R.id.textSelectedDate)
-        btnDatePicker = view.findViewById(R.id.btnLaunchCalendar)
         btnSubmit = view.findViewById(R.id.btnSubmit)
         layoutExpiryDate = view.findViewById(R.id.groupExpiryDate)
-        layoutManufacturingDate = view.findViewById(R.id.groupEnterManufactureDate)
         layoutExactDate = view.findViewById(R.id.groupExactDate)
         radioGroupExpiryDate = view.findViewById(R.id.radioGroupExpiry)
-        spinnerTimeline = view.findViewById(R.id.spinnerTimeline)
+        editName = view.findViewById(R.id.editTextName)
+        textExpiryDate = view.findViewById(R.id.textExpDatePreview)
+        btnDatePicker = view.findViewById(R.id.btnExpCalendar)
         spinnerTime = view.findViewById(R.id.spinnerTime)
 
         setUpInputForm()
@@ -92,13 +87,9 @@ class AddProductFragment : Fragment() {
 
     private fun setUpInputForm() {
         activity?.applicationContext?.let {
-            timelineAdapter = ArrayAdapter(it, android.R.layout.simple_spinner_item, duration)
             timeAdapter = ArrayAdapter(it, android.R.layout.simple_spinner_item, duration)
-            timelineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             timeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinnerTime.adapter = timeAdapter
-            spinnerTimeline.adapter = timelineAdapter
-            spinnerTimeline.setSelection(0)
             spinnerTime.setSelection(0)
         }
     }
@@ -108,17 +99,14 @@ class AddProductFragment : Fragment() {
             when (checkedId) {
                 R.id.radioExpiry -> {
                     layoutExpiryDate.visibility = VISIBLE
-                    layoutManufacturingDate.visibility = GONE
                     layoutExactDate.visibility = GONE
                 }
                 R.id.radioManufactureDate -> {
-                    layoutExpiryDate.visibility = GONE
-                    layoutManufacturingDate.visibility = VISIBLE
-                    layoutExactDate.visibility = GONE
+                    layoutExpiryDate.visibility = VISIBLE
+                    layoutExactDate.visibility = VISIBLE
                 }
                 R.id.radioExactDays -> {
                     layoutExpiryDate.visibility = GONE
-                    layoutManufacturingDate.visibility = GONE
                     layoutExactDate.visibility = VISIBLE
                 }
             }
@@ -141,9 +129,9 @@ class AddProductFragment : Fragment() {
             }
         }
         btnDatePicker.setOnClickListener {
-            context?.let { it1 ->
+            context?.let { _context ->
                 DatePickerDialog(
-                    it1, date, myCalendar[Calendar.YEAR],
+                    _context, date, myCalendar[Calendar.YEAR],
                     myCalendar[Calendar.MONTH],
                     myCalendar[Calendar.DAY_OF_MONTH]
                 ).show()
@@ -156,7 +144,7 @@ class AddProductFragment : Fragment() {
             myCalendar.set(Calendar.YEAR, year)
             myCalendar.set(Calendar.MONTH, monthOfYear)
             myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-            textExpiryDate.text = DateFormatters.getCurrentDateInDDMMYYYY()
+            textExpiryDate.text = DateFormatters.getCurrentDateInDDMMYYYY(myCalendar)
         }
 
 }
