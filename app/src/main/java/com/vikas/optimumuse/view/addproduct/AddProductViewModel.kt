@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 
 class AddProductViewModel(private val productRepository: ProductRepository): ViewModel() {
+
     fun insertProduct(product: Product){
         CoroutineScope(Main).launch {
             productRepository.insertProduct(product)

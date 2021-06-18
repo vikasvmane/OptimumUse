@@ -13,18 +13,16 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.Group
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.room.Room
 import com.google.android.material.transition.MaterialContainerTransform
-import com.vikas.optimumuse.model.Product
 import com.vikas.optimumuse.R
-import com.vikas.optimumuse.model.ProductRepositoryImpl
-import com.vikas.optimumuse.model.db.AppDatabase
+import com.vikas.optimumuse.model.Product
+import com.vikas.optimumuse.utils.DateFormatters
 import com.vikas.optimumuse.utils.MyViewModelFactory
 import com.vikas.optimumuse.utils.themeColor
 import com.vikas.optimumuse.view.MainActivity
-import java.text.SimpleDateFormat
+import com.vikas.optimumuse.view.addproduct.InputValidator.isInputValid
 import java.util.*
 
 /**
@@ -36,7 +34,6 @@ class AddProductFragment : Fragment() {
     private lateinit var btnDatePicker: Button
     private lateinit var btnSubmit: Button
     private val myCalendar = Calendar.getInstance()
-    private lateinit var db: AppDatabase
     private lateinit var layoutExpiryDate: Group
     private lateinit var layoutManufacturingDate: Group
     private lateinit var layoutExactDate: Group
@@ -71,15 +68,13 @@ class AddProductFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        db =
-            context?.let {
-                Room.databaseBuilder(
-                    it,
-                    AppDatabase::class.java, "product-list"
-                ).build()
-            }!!
-        addProductViewModel = ViewModelProviders.of(this, MyViewModelFactory(ProductRepositoryImpl(db.productDao()))).get(AddProductViewModel::class.java)
+
+        addProductViewModel = ViewModelProvider(this, MyViewModelFactory(context))
+            .get(AddProductViewModel::class.java)
+
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        (activity as MainActivity).fab.visibility = GONE
+
         editName = view.findViewById(R.id.editTextName)
         textExpiryDate = view.findViewById(R.id.textSelectedDate)
         btnDatePicker = view.findViewById(R.id.btnLaunchCalendar)
@@ -90,6 +85,12 @@ class AddProductFragment : Fragment() {
         radioGroupExpiryDate = view.findViewById(R.id.radioGroupExpiry)
         spinnerTimeline = view.findViewById(R.id.spinnerTimeline)
         spinnerTime = view.findViewById(R.id.spinnerTime)
+
+        setUpInputForm()
+        setUpListeners()
+    }
+
+    private fun setUpInputForm() {
         activity?.applicationContext?.let {
             timelineAdapter = ArrayAdapter(it, android.R.layout.simple_spinner_item, duration)
             timeAdapter = ArrayAdapter(it, android.R.layout.simple_spinner_item, duration)
@@ -100,6 +101,9 @@ class AddProductFragment : Fragment() {
             spinnerTimeline.setSelection(0)
             spinnerTime.setSelection(0)
         }
+    }
+
+    private fun setUpListeners() {
         radioGroupExpiryDate.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
                 R.id.radioExpiry -> {
@@ -119,14 +123,18 @@ class AddProductFragment : Fragment() {
                 }
             }
         }
-
-        (activity as MainActivity).fab.visibility = GONE
         btnSubmit.setOnClickListener {
-            if (isInputValid()) {
-                addProductViewModel.insertProduct(Product(
-                    title = editName.text.toString(),
-                    expiryPeriod = textExpiryDate.text.toString()
-                ))
+            if (isInputValid(
+                    productName = editName.text.toString(),
+                    expiryDate = textExpiryDate.text.toString()
+                )
+            ) {
+                addProductViewModel.insertProduct(
+                    Product(
+                        title = editName.text.toString(),
+                        expiryPeriod = textExpiryDate.text.toString()
+                    )
+                )
                 findNavController().popBackStack()
             } else {
                 Toast.makeText(context, "Please enter valid input", Toast.LENGTH_SHORT).show()
@@ -143,26 +151,12 @@ class AddProductFragment : Fragment() {
         }
     }
 
-    private fun isInputValid(): Boolean {
-        if (!editName.text.toString().isNullOrEmpty() && !textExpiryDate.text.toString()
-                .isNullOrEmpty()
-        ) {
-            return true
-        }
-        return false
-    }
-
     private var date =
         OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
             myCalendar.set(Calendar.YEAR, year)
             myCalendar.set(Calendar.MONTH, monthOfYear)
             myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-            updateLabel()
+            textExpiryDate.text = DateFormatters.getCurrentDateInDDMMYYYY()
         }
 
-    private fun updateLabel() {
-        val myFormat = "dd/MM/yyyy" //In which you need put here
-        val sdf = SimpleDateFormat(myFormat, Locale.ENGLISH)
-        textExpiryDate.text = sdf.format(myCalendar.time)
-    }
 }

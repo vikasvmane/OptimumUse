@@ -10,29 +10,23 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
 import com.vikas.optimumuse.R
-import com.vikas.optimumuse.model.db.AppDatabase
 import com.vikas.optimumuse.model.Product
-import com.vikas.optimumuse.model.ProductRepositoryImpl
 import com.vikas.optimumuse.utils.MyViewModelFactory
 import com.vikas.optimumuse.view.MainActivity
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 class ProductListFragment : Fragment() {
     lateinit var textTimer: TextView
-    private lateinit var productList: ArrayList<Product>
+    private var productList = arrayListOf<Product>()
     lateinit var recyclerViewProductList: RecyclerView
     lateinit var adapter: ProductRecyclerViewAdapter
     lateinit var productListViewModel: ProductListViewModel
-    lateinit var db: AppDatabase
     private var countDownTimer: CountDownTimer? = null
     private val dateFormat = "dd/MM/yyyy"
 
@@ -51,16 +45,14 @@ class ProductListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        db =
-            context?.let {
-                Room.databaseBuilder(
-                    it,
-                    AppDatabase::class.java, "product-list"
-                ).build()
-            }!!
-        val factory = MyViewModelFactory(ProductRepositoryImpl(db.productDao()))
-        productListViewModel = ViewModelProviders.of(this,factory).get(ProductListViewModel::class.java)
-        productListViewModel.productList.observe(viewLifecycleOwner,{
+
+        productListViewModel =
+            ViewModelProvider(
+                this,
+                MyViewModelFactory(context)
+            ).get(ProductListViewModel::class.java)
+
+        productListViewModel.productList.observe(viewLifecycleOwner, {
             productList = it as ArrayList<Product>
 
             val dtf = SimpleDateFormat(
@@ -76,10 +68,10 @@ class ProductListFragment : Fragment() {
             recyclerViewProductList.adapter = adapter
         })
         productListViewModel.getAllProducts()
-        recyclerViewProductList = activity?.findViewById(R.id.recyclerViewList) as RecyclerView
+        recyclerViewProductList = view.findViewById(R.id.recyclerViewList) as RecyclerView
         adapter = ProductRecyclerViewAdapter(productList)
         recyclerViewProductList.adapter = adapter
-        textTimer = activity?.findViewById(R.id.textTimer) as TextView
+        textTimer = view.findViewById(R.id.textTimer) as TextView
     }
 
     override fun onResume() {

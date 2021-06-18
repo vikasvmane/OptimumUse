@@ -1,6 +1,5 @@
 package com.vikas.optimumuse.model
 
-import androidx.lifecycle.LiveData
 import com.vikas.optimumuse.model.db.ProductDAO
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
