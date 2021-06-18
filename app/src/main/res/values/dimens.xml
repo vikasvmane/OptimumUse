@@ -1,0 +1,20 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="min_touch_target_size">48dp</dimen>
+    <dimen name="min_icon_target_padding">12dp</dimen>
+
+    <!--BottomAppBar-->
+    <dimen name="bottom_app_bar_height">56dp</dimen>
+    <dimen name="bottom_app_bar_fab_cradle_corner_radius">32dp</dimen>
+    <dimen name="bottom_app_bar_fab_cradle_margin">8dp</dimen>
+    <dimen name="bottom_app_bar_logo_size">32dp</dimen>
+
+    <!--BottomNavigationDrawer-->
+    <dimen name="navigation_drawer_profile_image_size">48dp</dimen>
+    <dimen name="navigation_drawer_profile_image_size_padded">32dp</dimen>
+    <dimen name="navigation_drawer_menu_item_height">56dp</dimen>
+
+    <dimen name="reply_small_component_corner_radius">24dp</dimen>
+    <dimen name="reply_medium_component_corner_radius">0dp</dimen>
+    <dimen name="reply_large_component_corner_radius">12dp</dimen>
+</resources>
