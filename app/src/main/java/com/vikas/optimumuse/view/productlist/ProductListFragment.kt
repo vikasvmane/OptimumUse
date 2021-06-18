@@ -46,6 +46,7 @@ class ProductListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        textTimer = view.findViewById(R.id.textTimer) as TextView
         productListViewModel =
             ViewModelProvider(
                 this,
@@ -66,20 +67,14 @@ class ProductListFragment : Fragment() {
 
             adapter = ProductRecyclerViewAdapter(productList)
             recyclerViewProductList.adapter = adapter
+            countDownTimer?.cancel()
+            if (productList.isNotEmpty()) countDownStart(productList[0].expiryPeriod) else textTimer.text =
+                "No Item Found"
         })
         productListViewModel.getAllProducts()
         recyclerViewProductList = view.findViewById(R.id.recyclerViewList) as RecyclerView
         adapter = ProductRecyclerViewAdapter(productList)
         recyclerViewProductList.adapter = adapter
-        textTimer = view.findViewById(R.id.textTimer) as TextView
-    }
-
-    override fun onResume() {
-        super.onResume()
-        adapter.notifyDataSetChanged()
-        countDownTimer?.cancel()
-        if (productList.isNotEmpty()) countDownStart(productList[0].expiryPeriod) else textTimer.text =
-            "No Item Found"
     }
 
     private fun countDownStart(date: String) {
