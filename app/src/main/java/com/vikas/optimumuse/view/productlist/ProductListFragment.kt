@@ -53,7 +53,7 @@ class ProductListFragment : Fragment() {
                 MyViewModelFactory(context)
             ).get(ProductListViewModel::class.java)
 
-        productListViewModel.productList.observe(viewLifecycleOwner, {
+        productListViewModel.productList.observe(viewLifecycleOwner) {
             productList = it as ArrayList<Product>
 
             val dtf = SimpleDateFormat(
@@ -70,7 +70,7 @@ class ProductListFragment : Fragment() {
             countDownTimer?.cancel()
             if (productList.isNotEmpty()) countDownStart(productList[0].expiryPeriod) else textTimer.text =
                 "No Item Found"
-        })
+        }
         productListViewModel.getAllProducts()
         recyclerViewProductList = view.findViewById(R.id.recyclerViewList) as RecyclerView
         adapter = ProductRecyclerViewAdapter(productList)
