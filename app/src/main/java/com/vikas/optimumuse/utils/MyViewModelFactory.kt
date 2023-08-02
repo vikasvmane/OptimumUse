@@ -8,7 +8,7 @@ import com.vikas.optimumuse.model.ProductRepositoryImpl
 import com.vikas.optimumuse.model.db.AppDatabase
 
 class MyViewModelFactory(private val context: Context?) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
         val repository = ProductRepositoryImpl(AppDatabase.getInstance(context!!).productDao())
         return modelClass.getConstructor(ProductRepository::class.java).newInstance(repository)
     }
